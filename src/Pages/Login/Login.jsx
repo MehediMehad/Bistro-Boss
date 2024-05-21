@@ -13,6 +13,8 @@ const Login = () => {
     const location = useLocation()
     const from = location.state?.from?.pathname || '/'
 
+    console.log("state in the location", location?.state);
+
 
 
 
@@ -106,7 +108,8 @@ const Login = () => {
                             {/* Validate Captcha Close */}
                             <div className="form-control mt-6">
                                 <input
-                                    disabled={disabled} //Captcha
+                                // TODO: apply disabled for re captcha
+                                    disabled={false} //Captcha
                                     className="btn btn-primary" type="submit" value="Login" />
                             </div>
                         </form>
