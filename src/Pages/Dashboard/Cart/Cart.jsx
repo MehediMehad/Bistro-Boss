@@ -2,6 +2,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import useCart from "../../../hooks/useCart";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
     const [cart, refetch] = useCart()
@@ -9,7 +10,7 @@ const Cart = () => {
     const floatPrice = parseFloat(totalPrice).toFixed(2)
     const axiosSecure = useAxiosSecure()
 
-    const handleDelete = id =>{
+    const handleDelete = id => {
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -18,21 +19,21 @@ const Cart = () => {
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-            axiosSecure.delete(`/carts/${id}`)
-            .then(res =>{
-                if (res.data.deletedCount > 0) {
-                    refetch()
-                    Swal.fire({
-                        title: "Deleted!",
-                        text: "Your file has been deleted.",
-                        icon: "success"
-                      });
-                }
-            })
+                axiosSecure.delete(`/carts/${id}`)
+                    .then(res => {
+                        if (res.data.deletedCount > 0) {
+                            refetch()
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success"
+                            });
+                        }
+                    })
             }
-          });
+        });
     }
 
     return (
@@ -40,7 +41,18 @@ const Cart = () => {
             <div className="flex justify-evenly mb-8">
                 <h2 className="text-3xl">Items: {cart.length}</h2>
                 <h2 className="text-3xl">Total Price: {floatPrice}</h2>
-                <button className="btn btn-primary">Pay</button>
+                {
+                    cart.length ?
+                        <>
+                            <Link to='/dashboard/payment'>
+                                <button className="btn btn-primary">Pay</button>
+                            </Link>
+                        </> :
+                        <>
+                            <button disabled className="btn btn-primary">Pay</button>
+
+                        </>
+                }
             </div>
             <div className="overflow-x-auto">
                 <table className="table w-full">
@@ -59,7 +71,7 @@ const Cart = () => {
                     <tbody>
                         {/* row 1 */}
                         {
-                            cart.map((item, index )=> <tr key={item._id}>
+                            cart.map((item, index) => <tr key={item._id}>
                                 <th>
                                     {index + 1}
                                 </th>
@@ -78,7 +90,7 @@ const Cart = () => {
                                 <td>${item.price}</td>
                                 <th>
                                     <button onClick={() => handleDelete(item._id)}
-                                     className="btn btn-ghost btn-lg">
+                                        className="btn btn-ghost btn-lg">
                                         <FaTrashAlt className="text-red-600"
                                         ></FaTrashAlt>
                                     </button>
